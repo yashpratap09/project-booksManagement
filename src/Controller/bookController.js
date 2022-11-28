@@ -81,7 +81,7 @@ const getBook = async function (req, res) {
         if (!validId) {
           return res
             .status(404)
-            .send({ status: false, msg: "Invalid AuthorId " });
+            .send({ status: false, msg: "Invalid userId " });
         }
       }
   
