@@ -1,13 +1,21 @@
-const express=require("express")
-const router=express.Router()
+const express = require('express');
+const router = express.Router();
 const userController=require("../Controller/userController")
-
-//------------------------------------------------------------------- Post Api ----------------------------------------------------
-
+const bookController=require("../Controller/bookController")
+const reviewController = require("../Controller/reviewController")
 
 router.post("/register",userController.createdUser)
-router.post('/login', userController.userLogin)
+
+router.post("/books", bookController.createBooks)
 
 
 
-module.exports = router
+
+router.get("/books/:bookId", bookController.booksById)
+
+
+
+
+router.post("/books/:bookId/review", reviewController.Reviewcreate);
+
+module.exports = router;

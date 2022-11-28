@@ -1,5 +1,5 @@
 const userModel = require("../Models/userModel")
-const { isValidName, isValidEmail, isValidNumber, isValidPassword,capitilize} = require("../validator/validator")
+const { isValidName, isValidEmail, isValidNumber, isValidPassward,capitilize} = require("../validator/validator")
 const jwt = require('jsonwebtoken')
 
 //------------------------------------------------------------------- Post Api for User Creation ----------------------------------------------------
@@ -23,7 +23,7 @@ const createdUser = async function (req, res) {
         if (!email) return res.status(400).send({ status: false, msg: "plz provide email" })
         if (!isValidEmail(email)) return res.status(400).send({ status: false, msg: "email is not valid" })
         if (!password) return res.status(400).send({ status: false, msg: "plz provide passward" })
-        if (!isValidPassword(password)) return res.status(400).send({ status: false, msg: "passward is not valid" })
+        if (!isValidPassward(password)) return res.status(400).send({ status: false, msg: "passward is not valid" })
         if (!address) return res.status(400).send({ status: false, msg: "plz provide address" })
         let uniqueEmail= await userModel.findOne({email:email})
         if(uniqueEmail)  return res.status(400).send({status:false,message:"email is already exist"})
