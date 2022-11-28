@@ -193,9 +193,54 @@ const deletById = async function (req, res) {
   }
 }
 
+
+
+//=============================================================================================================//
+const updateById = async function (req, res) {
+  try {
+      const bookId = req.params.bookId
+
+
+      if (bookId) {
+        const ObjectId = require("mongodb").ObjectId;
+        const validId = ObjectId.isValid(bookId);
+  
+        //authorId is not valid
+        if (!validId) {
+          return res
+            .status(404)
+            .send({ status: false, msg: "Invalid bookId " });
+        }
+      }
+
+      const data = req.body
+      if (Object.keys(bookId) == 0) {
+          return res.status(400).send({ status: false, message: "Invalid Id" })
+      }   
+      
+      const validobjectId = await bookModel.findOne({_id:bookId})
+      if(!validobjectId){return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" })}
+      
+      const updateData= await bookModel.findOneAndUpdate({ _id: bookId , isDeleted: false },{$set:{...data}},{new:true})
+
+          
+
+      return res.status(200).send({ status: true, msg:"Data Successfully updated", data: updateData })
+  }
+  catch (error) {
+      return res.status(500).send({ status: false, message: error.message })
+  }
+}
+
+
+
+
+
+
 module.exports.createBooks=createBooks
 module.exports.booksById=booksById
 module.exports.getBook=getBook
 module.exports.deletById=deletById
+module.exports.updateById=updateById
 
 
