@@ -167,7 +167,35 @@ const booksById = async function (req, res) {
     }
 }
 
+
+//=======================================================================================================//
+
+
+const deletById = async function (req, res) {
+  try {
+      const bookId = req.params.bookId
+      if (Object.keys(bookId) == 0) {
+          return res.status(400).send({ status: false, message: "Invalid Id" })
+      }
+
+      if (!isValidObjectId(bookId)) { return res.status(400).send({ status: false, message: 'provide a valid Id' }) }
+      const getdata = await bookModel.find({ _id: bookId, isDeleted: false }).select({ ISBN: 0 })
+      if (getdata.length == 0) {
+          return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" })
+      }
+      const deletData= await bookModel.updateOne({ bookId: bookId, isDeleted: false },{$set:{isDeleted:true}},{new:true})
+          
+
+      return res.status(200).send({ status: true, msg:"Data Successfully deleted", data: deletData })
+  }
+  catch (error) {
+      return res.status(500).send({ status: false, message: error.message })
+  }
+}
+
 module.exports.createBooks=createBooks
 module.exports.booksById=booksById
 module.exports.getBook=getBook
+module.exports.deletById=deletById
+
 
