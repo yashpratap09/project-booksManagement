@@ -1,5 +1,5 @@
 const userModel = require("../Models/userModel")
-const { isValidName, isValidEmail, isValidNumber, isValidPassward,capitilize} = require("../validator/validator")
+const { isValidName, isValidEmail, isValidNumber, isValidPassward,forName} = require("../validator/validator")
 const jwt = require('jsonwebtoken')
 
 //------------------------------------------------------------------- Post Api for User Creation ----------------------------------------------------
@@ -17,7 +17,10 @@ const createdUser = async function (req, res) {
         if (!["Miss", "Mrs", "Mr"].includes(title)) return res.status(400).send({ status: false, msg: "plz provide valid title" })
         if (!name) return res.status(400).send({ status: false, msg: "plz provide name" })
         if (!isValidName(name)) return res.status(400).send({ status: false, msg: "name is not valid" })
-        if (!capitilize(name)) return res.status(400).send({ status: false, msg: "name is not in correct formate" })
+
+        if (!forName(name)) return res.status(400).send({ status: false, msg: "name is not valid" })
+
+        
         if (!phone) return res.status(400).send({ status: false, msg: "plz provide phone no" })
         if (!isValidNumber(phone)) return res.status(400).send({ status: false, msg: "phone is not valid" })
         if (!email) return res.status(400).send({ status: false, msg: "plz provide email" })

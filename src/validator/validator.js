@@ -8,9 +8,14 @@ const isValidName = function (value) {
     }
   }
 
-const capitilize=function(value){
-    return value.toLowerCase().split("").map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join("")
-}
+
+
+
+  const forName = function (value) {
+    return /^[A-Z][a-z]{1,}(?: [A-Z][a-z]+){0,}$/.test(value);
+  };
+
+
 const isValidEmail = function(value){
     let emailRegex=/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-z\-0-9]+\.)+[a-z]{2,3}))$/
 if (emailRegex.test(value)) return true
@@ -38,4 +43,4 @@ const validatorISBN = function (ISBN) {
 
 
 
-module.exports={isValidName,isValidEmail,isValidNumber,isValidPassward,capitilize , isValidObjectId,validatorISBN}
+module.exports={isValidName,isValidEmail,isValidNumber,isValidPassward , isValidObjectId,validatorISBN,forName}
