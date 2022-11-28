@@ -60,7 +60,7 @@ if(!isValidEmail(email)){
 return res.status(400).send({status:false, message:"invalid email"})}
 
 
-if(!isValidPassword(password)){
+if(!isValidPassward(password)){
 return res.status(400).send({status:false, message:"invalid password"})}
 
 

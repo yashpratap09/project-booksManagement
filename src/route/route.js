@@ -5,6 +5,7 @@ const bookController=require("../Controller/bookController")
 const reviewController = require("../Controller/reviewController")
 
 router.post("/register",userController.createdUser)
+router.post("/login",userController.userLogin)
 
 router.post("/books", bookController.createBooks)
 
