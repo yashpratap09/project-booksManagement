@@ -4,4 +4,4 @@ const userController=require("../Controller/userController")
 
 router.post("/register",userController.createdUser)
 
-module.exports.router=router
+module.exports = router
