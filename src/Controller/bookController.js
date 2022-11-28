@@ -65,6 +65,47 @@ const createBooks = async function (req, res) {
 
 
 
+//===================================================================================================================//
+
+const getBook = async function (req, res) {
+    try {
+      const queryParams = req.query; //getting data from Query params
+      const userid = req.query.userId
+  
+      // checking AuthorID is available or not in database
+      if (userid) {
+        const ObjectId = require("mongodb").ObjectId;
+        const validId = ObjectId.isValid(userid);
+  
+        //authorId is not valid
+        if (!validId) {
+          return res
+            .status(404)
+            .send({ status: false, msg: "Invalid AuthorId " });
+        }
+      }
+  
+      // we are finding the data is available or not in quary params
+      const book = await bookModel.find({
+        isDeleted: false,
+        ...queryParams,
+      });
+  
+      if (book.length == 0) {
+        return res
+          .status(404)
+          .send({ status: false, msg: "Document doesnt exist" });
+      }
+  
+      if (book) {
+        return res.status(200).send({ status: true,count:book.length, msg: book });
+      }
+    } catch (err) {
+    
+      console.log("It seems an error", err.message);
+      return res.status(500).send({ msg: "Error", error: err.message });
+    }
+  };
 
 
 
@@ -88,8 +129,7 @@ const createBooks = async function (req, res) {
 
 
 
-
-
+//==================================================================================================================//
 
 const booksById = async function (req, res) {
     try {
@@ -129,4 +169,5 @@ const booksById = async function (req, res) {
 
 module.exports.createBooks=createBooks
 module.exports.booksById=booksById
+module.exports.getBook=getBook
 

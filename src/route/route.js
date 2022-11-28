@@ -12,6 +12,7 @@ router.post("/books", bookController.createBooks)
 
 
 router.get("/books/:bookId", bookController.booksById)
+router.get("/books", bookController.getBook)
 
 
 
