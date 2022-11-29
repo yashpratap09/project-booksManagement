@@ -47,9 +47,10 @@ const authorisation  = async function (req, res, next) {
         
 
         let idParams = req.params.bookId
-        if (!isValidObjectId(idParams)) { return res.status(400).send({ status: false, message: 'Please provide a valid bookId' }) }
+        
 
         if(idParams){
+            if (!isValidObjectId(idParams)) { return res.status(400).send({ status: false, message: 'Please provide a valid bookId' }) }
             let checkId = await bookModel.find({_id:idParams}).select({userId:1,_id:0})
             let userId = checkId.map(x=>x.userId)
 
@@ -62,7 +63,7 @@ const authorisation  = async function (req, res, next) {
         }
         else{
             let idBody = req.body.userId
-            if (!isValidObjectId(idBody)) { return res.status(400).send({ status: false, message: 'Please provide a valid bookId' }) }
+            if (!isValidObjectId(idBody)) { return res.status(400).send({ status: false, message: 'Please provide a valid UserId' }) }
             let tokenUserId = req.loginUserId
             if(idBody !=tokenUserId){return res.status(403).send({ status: false, msg: 'You are not authorised to perform this task 2' })}
 
