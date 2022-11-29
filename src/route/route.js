@@ -31,6 +31,6 @@ router.post("/books/:bookId/review", reviewController.Reviewcreate);
 
 
 
-router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReview);
+router.delete("/books/:bookId/review/:reviewId",auth.authenticate,auth.authorisation, reviewController.deleteReview);
 
 module.exports = router;
