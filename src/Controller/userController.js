@@ -73,7 +73,7 @@ const userLogin = async function (req, res) {
             password: userDetail.password,
             id: userDetail._id.toString(),
 
-        }, "project/booksManagementGroup22",{ expiresIn: '30s' })
+        }, "project/booksManagementGroup22",{ expiresIn: '30m' })
         res.setHeader("x-api-key", token)
 
 
