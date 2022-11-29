@@ -1,5 +1,5 @@
 const userModel = require("../Models/userModel")
-const { isValidName, isValidEmail, isValidNumber, isValidPassword, forName } = require("../validator/validator")
+const { isValidName, isValidEmail, isValidNumber, isValidPassward, forName } = require("../validator/validator")
 const jwt = require('jsonwebtoken')
 
 
@@ -23,7 +23,7 @@ const createdUser = async function (req, res) {
         if (!forName(name)) return res.status(400).send({ status: false, message: "name is not valid" })
         if (!isValidNumber(phone)) return res.status(400).send({ status: false, message: "phone no is not valid" })
         if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is not valid" })
-        if (!isValidPassword(password)) return res.status(400).send({ status: false, message: "password is not valid" })
+        if (!isValidPassward(password)) return res.status(400).send({ status: false, message: "password is not valid" })
 
         let uniqueEmail = await userModel.findOne({ email: email })
         if (uniqueEmail) return res.status(400).send({ status: false, message: "email is already registered" })
@@ -57,7 +57,7 @@ const userLogin = async function (req, res) {
         if (!isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "invalid email" })
         }
-        if (!isValidPassword(password)) {
+        if (!isValidPassward(password)) {
             return res.status(400).send({ status: false, message: "invalid password" })
         }
 
