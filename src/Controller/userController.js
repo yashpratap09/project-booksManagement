@@ -69,8 +69,6 @@ const userLogin = async function (req, res) {
 
         
         let token = jwt.sign({
-            email: userDetail.email,
-            password: userDetail.password,
             id: userDetail._id.toString(),
 
         }, "project/booksManagementGroup22",{ expiresIn: '30m' })
