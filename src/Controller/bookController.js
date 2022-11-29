@@ -15,7 +15,7 @@ const createBooks = async function (req, res) {
        
 
 
-        if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'Badff request' }) }
+        if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'Bad request' }) }
 
   
 
@@ -50,7 +50,7 @@ const createBooks = async function (req, res) {
         if (!isValidName(data.subcategory)) { return res.status(400).send({ status: false, message: 'Subcategory is required' }) }
 
       let date = moment().format("YYYY-MM-DD")
-      console.log(date)
+  
 
         const createBook = await bookModel.create(data);
 
@@ -69,33 +69,21 @@ const createBooks = async function (req, res) {
 
 const getBook = async function (req, res) {
     try {
-      const queryParams = req.query; //getting data from Query params
+      const queryParams = req.query; 
       const userid = req.query.userId
-  
-      // checking AuthorID is available or not in database
       if (userid) {
         const ObjectId = require("mongodb").ObjectId;
         const validId = ObjectId.isValid(userid);
-  
-        //authorId is not valid
-        if (!validId) {
-          return res
-            .status(404)
-            .send({ status: false, msg: "Invalid userId " });
-        }
-      }
-  
-      // we are finding the data is available or not in quary params
-      const book = await bookModel.find({
-        isDeleted: false,
-        ...queryParams,
-      });
+        if (!validId) {return res.status(404).send({ status: false, msg: "Invalid userId " });}}
+        
+      const book = await bookModel.find({isDeleted: false,...queryParams,}).select({_id:1,title:1,excerpt:1,userId:1,category:1,
+        releasedAt:1, reviews:1}).sort({title:1});
+      
   
       if (book.length == 0) {
         return res
           .status(404)
-          .send({ status: false, msg: "Document doesnt exist" });
-      }
+          .send({ status: false, msg: "Document doesnt exist" });}
   
       if (book) {
         return res.status(200).send({ status: true,count:book.length, msg: book });

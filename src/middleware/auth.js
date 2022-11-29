@@ -5,18 +5,18 @@ const jwt = require("jsonwebtoken")
 const authenticate = function (req, res, next) {
     try {
         const token = req.headers["x-api-key"]
-        let data
+
         if (!token) {
-           return res.status(400).send({ status: false, message: "token must be present" })
+            return res.status(400).send({ status: false, message: "token must be present in headers" })
         }
         else {
-            data= jwt.verify(token, "project/booksManagementGroup22", function (err, data) {
+            decodedToken =jwt.verify(token,"project/booksManagementGroup22",function(err, decodedToken) {
                 if (err) {
-                    return res.status(400).send({ status: false, message: err.message })
+                    return res.status(401).send({ status: false, message: "Authontication faild" })
                 }
                 else {
-                    req.loginUserId = data.id
-                    if (data.exp > Date.now()) {
+                    req.loginUserId = decodedToken.id
+                    if (decodedToken.exp > Date.now()) {
                         next()
                     }
                     else {
@@ -31,4 +31,24 @@ const authenticate = function (req, res, next) {
     }
 }
 
+
+
+const authorisation  = async function (req, res, next) {
+    try {
+        let yash = req.loginUserId
+        console.log(yash)
+        // let newbookId =  
+
+
+
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).send({ msg: error.message })
+    }
+}
+
+
+
 module.exports.authenticate= authenticate
+module.exports.authorisation = authorisation
