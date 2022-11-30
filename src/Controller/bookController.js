@@ -15,7 +15,7 @@ const createBooks = async function (req, res) {
 
 
 
-    if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'Bad request' }) }
+    if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'plz provide Data' }) }
 
 
 
@@ -42,7 +42,9 @@ const createBooks = async function (req, res) {
 
     if (!isValidName(data.category)) { return res.status(400).send({ status: false, message: 'Category is required' }) }
 
-    if (!isValidName(data.releasedAt)) { return res.status(400).send({ status: false, message: 'Released date is required' }) }
+  if(data.releasedAt){
+
+    if (!isValidName(data.releasedAt)) { return res.status(400).send({ status: false, message: 'Released date is required' }) }}
 
 
 
@@ -50,16 +52,18 @@ const createBooks = async function (req, res) {
     if (!isValidName(data.subcategory)) { return res.status(400).send({ status: false, message: 'Subcategory is required' }) }
 
     let date = moment().format("YYYY-MM-DD")
+    
+    if(!data.releasedAt){data.releasedAt = date}
 
+    const createBook = await bookModel.create(data)
 
-    const createBook = await bookModel.create(data);
+    return res.status(201).send({ status: true, message: 'Success', data: createBook})
 
-    return res.status(201).send({ status: true, message: 'Success', data: createBook, releasedAt: date })
 
   }
   catch (error) {
     console.log(error)
-    return res.status(500).send({  status: false, message: err.message })
+    return res.status(500).send({ status: false, message: err.message })
   }
 }
 
@@ -134,7 +138,7 @@ const booksById = async function (req, res) {
     return res.status(200).send({ status: true, data: Data })
   }
   catch (error) {
-    return res.status(500).send({  status: false, message: err.message })
+    return res.status(500).send({ status: false, message: err.message })
   }
 }
 
@@ -157,13 +161,13 @@ const deletById = async function (req, res) {
     }
     const deletData = await bookModel.findByIdAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true } })
 
-    const deletReview = await reviewModel.updateMany({ bookId : bookId, isDeleted: false },{ $set: { isDeleted: true } })
+    const deletReview = await reviewModel.updateMany({ bookId: bookId, isDeleted: false }, { $set: { isDeleted: true } })
 
 
     return res.status(200).send({ status: true, msg: "Data Successfully deleted", })
   }
   catch (error) {
-    return res.status(500).send({  status: false, message: err.message })
+    return res.status(500).send({ status: false, message: err.message })
   }
 }
 
@@ -185,21 +189,21 @@ const updateById = async function (req, res) {
     if (ISBN) {
       if (!validatorISBN(ISBN)) { return res.status(400).send({ status: false, message: 'Please provide a valid ISBN' }) }
     }
-    
+
     const duplicate = await bookModel.find({ ISBN: ISBN })
-    
+
     if (duplicate.length !== 0) {
       return res.status(404).send({ status: false, message: "ISBN is alredy exit in Database" })
     }
-    
+
     const duplicateTitle = await bookModel.find({ title: title })
-    
+
     if (duplicateTitle.length !== 0) {
       return res.status(404).send({ status: false, message: "Title is alredy exit in Database" })
     }
-    
-    
-    const validobjectId = await bookModel.findOne({ _id: bookId,isDeleted:false })
+
+
+    const validobjectId = await bookModel.findOne({ _id: bookId, isDeleted: false })
     console.log(validobjectId)
     if (!validobjectId) { return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" }) }
 
