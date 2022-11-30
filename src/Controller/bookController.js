@@ -159,9 +159,10 @@ const deletById = async function (req, res) {
     if (getdata.length == 0) {
       return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" })
     }
-    const deletData = await bookModel.findByIdAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true } })
+    let date = moment().format("YYYY-MM-DD")
+    const deletData = await bookModel.findByIdAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true,deletedAt:date } })
 
-    const deletReview = await reviewModel.updateMany({ bookId: bookId, isDeleted: false }, { $set: { isDeleted: true } })
+    const deletReview = await reviewModel.updateMany({ bookId: bookId, isDeleted: false }, { $set: { isDeleted: true,deletedAt:date } })
 
 
     return res.status(200).send({ status: true, msg: "Data Successfully deleted", })

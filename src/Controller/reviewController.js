@@ -157,7 +157,9 @@ const deleteReview = async function (req, res) {
 
         if (findReview.isDeleted == true) { return res.status(400).send({ status: false, message: "Review has already been deleted" }) }
 
-        const deleteReviewDetails = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true, deletedAt: new Date() }, { new: true })
+        let date = moment().format("YYYY-MM-DD")
+
+        const deleteReviewDetails = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true, deletedAt:date }, { new: true })
 
         const updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: -1 } })
 
