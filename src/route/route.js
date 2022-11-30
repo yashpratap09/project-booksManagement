@@ -11,10 +11,11 @@ const auth = require("../middleware/auth")
 router.post("/register",userController.createdUser)
 router.post("/login",userController.userLogin)
 
+
+
+
+
 router.post("/books" ,auth.authenticate,auth.authorisation, bookController.createBooks)
-
-
-
 
 router.get("/books/:bookId",auth.authenticate, bookController.booksById)
 
@@ -31,6 +32,12 @@ router.post("/books/:bookId/review", reviewController.Reviewcreate);
 
 
 
-router.delete("/books/:bookId/review/:reviewId",auth.authenticate,auth.authorisation, reviewController.deleteReview);
+router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReview);    //auth.authenticate,auth.authorisation   // 
+
+
+router.all("/*", async function (req, res) {
+    return res.status(400).send({ status: false, message: "Bad reqeust/invalid Path" });
+  });
+
 
 module.exports = router;

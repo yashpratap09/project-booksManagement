@@ -16,21 +16,21 @@ const createdUser = async function (req, res) {
         if (!phone) { return res.status(400).send({ status: false, message: "phone no is mandatory" }) }
         if (!email) { return res.status(400).send({ status: false, message: "email is mandatory" }) }
         if (!password) {return res.status(400).send({ status: false, message: "password is mandatory"}) }
-
+        
         if (!isValidName(title)) return res.status(400).send({ status: false, message: "plz provide title" })
         if (!["Miss", "Mrs", "Mr"].includes(title)) return res.status(400).send({ status: false, message: "title takes only Mr, Miss, Mrs" })
-
-        if (!forName(name)) return res.status(400).send({ status: false, message: "name is not valid" })
+        if (!isValidName(name)) return res.status(400).send({ status: false, message: "Plz provied a valid name" })
+        if (!forName(name)) return res.status(400).send({ status: false, message: "first letter of your name should be Capital" })
         if (!isValidNumber(phone)) return res.status(400).send({ status: false, message: "phone no is not valid" })
         if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is not valid" })
         if (!isValidPassward(password)) return res.status(400).send({ status: false, message: "password is not valid" })
 
-        let uniqueEmail = await userModel.findOne({ email: email })
-        if (uniqueEmail) return res.status(400).send({ status: false, message: "email is already registered" })
-
+        
         let uniquePhn = await userModel.findOne({ phone: phone })
         if (uniquePhn) return res.status(400).send({ status: false, message: "phone no is already registered" })
-
+        
+        let uniqueEmail = await userModel.findOne({ email: email })
+        if (uniqueEmail) return res.status(400).send({ status: false, message: "email is already registered" })
         let userData = await userModel.create(data)
         return res.status(201).send({ status: true, message: 'Success', data: userData })
     }
@@ -47,9 +47,13 @@ const userLogin = async function (req, res) {
     try {
         let credentials = req.body
         let { email, password } = credentials
+        
         if (Object.keys(credentials) == 0) {
             return res.status(400).send({ status: false, message: "email and password are required" })
         }
+        if (!email) { return res.status(400).send({ status: false, message: "email is mandatory" }) }
+        if (!password) {return res.status(400).send({ status: false, message: "password is mandatory"}) }
+        
         if (email.length == 0 || password.length == 0) {
             return res.status(400).send({ status: false, message: "both fields are required." })
         }

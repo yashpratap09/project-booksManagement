@@ -18,7 +18,7 @@ const authenticate = function (req, res, next) {
             jwt.verify(token,"project/booksManagementGroup22",function(err, decodedToken) {
                 
                 if (err) {
-                    return res.status(401).send({ status: false, message: err })
+                    return res.status(401).send({ status: false, message: err.message })
                 }
                 
                 else {
