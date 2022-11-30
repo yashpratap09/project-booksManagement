@@ -156,7 +156,7 @@ const deletById = async function (req, res) {
     if (getdata.length == 0) {
       return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" })
     }
-    const deletData = await bookModel.updateOne({ bookId: bookId, isDeleted: false }, { $set: { isDeleted: true } }, { new: true })
+    const deletData = await bookModel.findByIdAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true } }, { new: true })
 
 
     return res.status(200).send({ status: true, msg: "Data Successfully deleted", data: deletData })
