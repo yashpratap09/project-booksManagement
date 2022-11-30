@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 
 //--- Post Api for User Creation ---
-
+//=========================================<== CREATER USRER API==>==============================================================//
 const createdUser = async function (req, res) {
     try {
         let data = req.body
@@ -40,8 +40,8 @@ const createdUser = async function (req, res) {
 }
 
 
-//--- Sign In ---
 
+//=========================================<== SIGNIN API==>==============================================================//
 
 const userLogin = async function (req, res) {
     try {
