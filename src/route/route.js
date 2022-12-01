@@ -11,21 +11,15 @@ const auth = require("../middleware/auth")
 router.post("/register",userController.createdUser)
 router.post("/login",userController.userLogin)
 
-
-
-
-
 router.post("/books" ,auth.authenticate,auth.authorisation, bookController.createBooks)
 
-router.get("/books/:bookId",auth.authenticate, bookController.booksById)
+router.get("/books/:bookId", bookController.booksById) //auth.authenticate,
 
-router.get("/books",auth.authenticate, bookController.getBook)
+router.get("/books", bookController.getBook) //auth.authenticate,
 
 router.delete("/books/:bookId", bookController.deletById)
 
 router.put("/books/:bookId",auth.authenticate,auth.authorisation, bookController.updateById)
-
-
 
 
 router.post("/books/:bookId/review", reviewController.Reviewcreate);
@@ -40,7 +34,7 @@ router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReview);
 
 
 router.all("/*", async function (req, res) {
-    return res.status(400).send({ status: false, message: "Bad reqeust/invalid Path" });
+    return res.status(400).send({ status: false, message: "Bad reqeust / invalid Path" });
   });
 
 
