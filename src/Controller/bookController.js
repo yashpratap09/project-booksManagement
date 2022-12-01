@@ -15,13 +15,13 @@ const createBooks = async function (req, res) {
 
 
 
-    if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'plz provide Data' }) }
+    if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'plz provide Data' }) }  // When body have No data
 
-
+ //===========================validate by using validetor folder(by using Regex and somthing)===============================// 
 
     if (!isValidName(data.title)) { return res.status(400).send({ status: false, message: 'Title is required' }) }
 
-    let isUniquetitle = await bookModel.findOne({ title: data.title })
+    let isUniquetitle = await bookModel.findOne({ title: data.title })        // checking Title is Unique or not //
     if (isUniquetitle) { return res.status(400).send({ status: false, message: 'Title already exist' }) }
 
     if (!isValidName(data.excerpt)) { return res.status(400).send({ status: false, message: 'Excerpt is required' }) }
@@ -37,7 +37,7 @@ const createBooks = async function (req, res) {
 
     if (!validatorISBN(data.ISBN)) { return res.status(400).send({ status: false, message: 'Please provide a valid ISBN' }) }
 
-    let isUniqueISBN = await bookModel.findOne({ ISBN: data.ISBN })
+    let isUniqueISBN = await bookModel.findOne({ ISBN: data.ISBN })    //  // checking SBIN Number is Unique or not //
     if (isUniqueISBN) { return res.status(400).send({ status: false, message: 'ISBN already exist' }) }
 
     if (!isValidName(data.category)) { return res.status(400).send({ status: false, message: 'Category is required' }) }
@@ -51,7 +51,7 @@ const createBooks = async function (req, res) {
 
     if (!isValidName(data.subcategory)) { return res.status(400).send({ status: false, message: 'Subcategory is required' }) }
 
-    let date = moment().format("YYYY-MM-DD")
+    let date = moment().format("YYYY-MM-DD")          //date by using Moment
     
     if(!data.releasedAt){data.releasedAt = date}
 
@@ -159,7 +159,7 @@ const deletById = async function (req, res) {
     if (getdata.length == 0) {
       return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" })
     }
-    let date = moment().format("YYYY-MM-DD")
+    let date = moment().format("YYYY-MM-DD")     //date by using Moment
     const deletData = await bookModel.findByIdAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true,deletedAt:date } })
 
     const deletReview = await reviewModel.updateMany({ bookId: bookId, isDeleted: false }, { $set: { isDeleted: true,deletedAt:date } })
