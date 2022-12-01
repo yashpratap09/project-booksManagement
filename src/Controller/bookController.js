@@ -12,7 +12,9 @@ const createBooks = async function (req, res) {
   try {
     const data = req.body;
 
-    if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'plz provide Data' }) }
+    if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'plz provide Data' }) }// When body have No data
+
+    //===========================validate by using validetor folder(by using Regex and somthing)===============================//
 
     if (!isValidName(data.title)) { return res.status(400).send({ status: false, message: 'Title is required' }) }
 
@@ -156,7 +158,7 @@ const deletById = async function (req, res) {
     if (getdata.length == 0) {
       return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" })
     }
-    let date = moment().format("YYYY-MM-DD")
+    let date = moment().format("YYYY-MM-DD")     //date by using Moment
     const deletData = await bookModel.findByIdAndUpdate({ _id: bookId, isDeleted: false }, { $set: { isDeleted: true,deletedAt:date } })
 
     const deletReview = await reviewModel.updateMany({ bookId: bookId, isDeleted: false }, { $set: { isDeleted: true,deletedAt:date } })
@@ -206,13 +208,13 @@ const updateById = async function (req, res) {
 
       if (ISBN) {
       if (!isValidName(data.ISBN)) { return res.status(400).send({ status: false, message: 'ISBN should not be empty' }) }
-      if (!validatorISBN(ISBN)) { return res.status(400).send({ status: false, message: 'Please provide a valid ISBN' }) }
+      if (!validatorISBN(ISBN)) { return res.status(400).send({ status: false, message: 'Please provide a valid ISBN' }) } 
 
       const duplicate = await bookModel.findOne({ ISBN: ISBN })
   
       if (duplicate) {
         return res.status(409).send({ status: false, message: "ISBN is alredy exist in Database" })
-      }
+      } // checking ISBN Number is Unique or not
     }
     
     if(title){
@@ -223,12 +225,12 @@ const updateById = async function (req, res) {
   
       if (duplicateTitle) {
         return res.status(409).send({ status: false, message: "Title is alredy exist in Database" })
-      }
+      } // checking Title is Unique or not
   }
 
   const validobjectId = await bookModel.findOne({ _id: bookId, isDeleted: false })
 
-  if (!validobjectId) { return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" }) }
+  if (!validobjectId) { return res.status(404).send({ status: false, message: "Data dont exit in your Database in this Id" }) } 
 
   const updateData = await bookModel.findOneAndUpdate({ _id: bookId}, { $set: { ...data } }, { new: true })
 

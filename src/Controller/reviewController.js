@@ -27,24 +27,22 @@ const Reviewcreate = async function (req, res) {
 
         if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'Please provide a valid Id' }) }
 
-        let Books = await bookModel.findById(id);
-        if (!Books) { return res.status(400).send({ status: false, message: 'Data dont exit in your Database, please provide a valid Id' }) }
 
 
 
-        if (rating < 1 || rating > 5) { return res.status(400).send({ status: false, message: "Rating lenth B/W  min 1 to max 5" }) }
+        if (rating <= 1 || rating >= 5) { return res.status(400).send({ status: false, message: "Rating lenth B/W  min 1 to max 5" }) }
 
 
-        let date = moment().format("YYYY-MM-DD")
+        let date = moment().format("YYYY-MM-DD")                //date by using Moment
         data.reviewedAt = date;
         data.bookId = id
 
-        const updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } }, { new: true })
+        const updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } }, { new: true })  // update reviews 
 
         const reviews = await reviewModel.create(data);
 
 
-        return res.status(201).send({ status: true, data: { ...updatedBook.toObject(), reviewsData: reviews } })
+        return res.status(201).send({ status: true, data: { ...updatedBook.toObject(), reviewsData: reviews } })        //using toObject() Function in adding new key value pair in Response
 
     }
     catch (error) {
@@ -53,7 +51,7 @@ const Reviewcreate = async function (req, res) {
 }
 
 
-//==================================================================================================================//
+//======================================<== updateReview RREVIEW API==>============================================================//
 
 const updateReview = async function (req, res) {
     try {
@@ -100,9 +98,7 @@ const updateReview = async function (req, res) {
                 }
             }
             if (rating) {
-                if (!isValidName(rating)) {
-                    return res.status(404).send({ message: "plz write Rating" })
-                }
+                
                 if (rating < 1 || rating > 5) {
                     return res.status(400).send({ status: false, message: "Rating Value Between 1 to 5" })
                 }
@@ -119,19 +115,6 @@ const updateReview = async function (req, res) {
         res.status(500).send({ status: false, message: error.message });
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -157,7 +140,7 @@ const deleteReview = async function (req, res) {
 
         if (findReview.isDeleted == true) { return res.status(400).send({ status: false, message: "Review has already been deleted" }) }
 
-        let date = moment().format("YYYY-MM-DD")
+        let date = moment().format("YYYY-MM-DD")         //date by using Moment
 
         const deleteReviewDetails = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true, deletedAt:date }, { new: true })
 
@@ -173,6 +156,8 @@ const deleteReview = async function (req, res) {
         res.status(500).send({ status: false, message: error.message })
     }
 }
+
+//========================================================================================================//
 
 
 module.exports.Reviewcreate = Reviewcreate;

@@ -7,9 +7,13 @@ const reviewController = require("../Controller/reviewController")
 
 const auth = require("../middleware/auth")
 
+//============================user Api===============================================//
 
 router.post("/register",userController.createdUser)
-router.post("/login",userController.userLogin)
+router.post("/login",userController.userLogin)             // login Api
+
+
+//============================== books API===========================================//
 
 router.post("/books" ,auth.authenticate,auth.authorisation, bookController.createBooks)
 
@@ -22,6 +26,8 @@ router.delete("/books/:bookId", bookController.deletById)
 router.put("/books/:bookId",auth.authenticate,auth.authorisation, bookController.updateById)
 
 
+//==============================reviews API===========================================//
+
 router.post("/books/:bookId/review", reviewController.Reviewcreate);
 
 router.put("/books/:bookId/review/:reviewId", reviewController.updateReview);  
@@ -31,6 +37,7 @@ router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReview);
 
 
 
+//===============================router validation(For path is valid or Not)===================================================//
 
 
 router.all("/*", async function (req, res) {

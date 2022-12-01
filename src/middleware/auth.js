@@ -4,11 +4,11 @@ const bookModel = require("../Models/bookModel")
 const userModel = require("../Models/userModel")
 const { isValidObjectId } = require("../validator/validator")
 
-//================================================Authentication======================================================
+//================================================Authentication======================================================//
 
 const authenticate = function (req, res, next) {
     try {
-        const token = req.headers["x-api-key"]
+        const token = req.headers["x-api-key"]  // token from headers
 
 
         if (!token) {
@@ -20,8 +20,12 @@ const authenticate = function (req, res, next) {
                 if (err) {
                     return res.status(401).send({ status: false, message: err.message })
                 }
-                req.loginUserId = decodedToken.id
-                next()
+                else{
+
+                    req.loginUserId = decodedToken.id       // golbelly  in  decodedToken.id 
+                    next()
+
+                }
             })
         }
     }
@@ -32,11 +36,13 @@ const authenticate = function (req, res, next) {
 
 
 
+//===============================================authorisation====================================================//
+
 const authorisation = async function (req, res, next) {
     try {
 
 
-        let idParams = req.params.bookId
+        let idParams = req.params.bookId  
 
 
         if (idParams) {
