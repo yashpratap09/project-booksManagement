@@ -27,12 +27,10 @@ const Reviewcreate = async function (req, res) {
 
         if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'Please provide a valid Id' }) }
 
-        let Books = await bookModel.findById(id);
-        if (!Books) { return res.status(400).send({ status: false, message: 'Data dont exit in your Database, please provide a valid Id' }) }
 
 
 
-        if (rating < 1 || rating > 5) { return res.status(400).send({ status: false, message: "Rating lenth B/W  min 1 to max 5" }) }
+        if (rating <= 1 || rating >= 5) { return res.status(400).send({ status: false, message: "Rating lenth B/W  min 1 to max 5" }) }
 
 
         let date = moment().format("YYYY-MM-DD")                //date by using Moment
@@ -100,9 +98,7 @@ const updateReview = async function (req, res) {
                 }
             }
             if (rating) {
-                if (!isValidName(rating)) {
-                    return res.status(404).send({ message: "plz write Rating" })
-                }
+                
                 if (rating < 1 || rating > 5) {
                     return res.status(400).send({ status: false, message: "Rating Value Between 1 to 5" })
                 }
