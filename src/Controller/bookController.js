@@ -193,13 +193,13 @@ const updateById = async function (req, res) {
 
     const duplicate = await bookModel.find({ ISBN: ISBN })
 
-    if (duplicate.length !== 0) {
+    if (duplicate.length !== 0) {              // checking ISBN Number is Unique or not
       return res.status(404).send({ status: false, message: "ISBN is alredy exit in Database" })
     }
 
     const duplicateTitle = await bookModel.find({ title: title })
 
-    if (duplicateTitle.length !== 0) {
+    if (duplicateTitle.length !== 0) {        // checking Title is Unique or not
       return res.status(404).send({ status: false, message: "Title is alredy exit in Database" })
     }
 
