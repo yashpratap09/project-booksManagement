@@ -11,27 +11,19 @@ const Reviewcreate = async function (req, res) {
         let id = req.params.bookId;
         const { rating } = data
 
-        if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'provide a valid id' }) }
+        if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'Provide a valid bookId' }) }
 
-
-
-        let books = await bookModel.findById(id);
-        if (!books) { return res.status(404).send({ status: false, message: 'Data dont exit in your Database / provied valid Id' }) }
-
-        let is_Deleted = books.isDeleted;
-        if (is_Deleted == true) { return res.status(404).send({ status: false, message: 'Book is deleted/Data dont exit in your Database' }) }
-
+        const book = await bookModel.find({ _id: id, isDeleted: false })
+        if (book.length == 0) {
+            return res.status(404).send({ status: false, message: "No book exists in Database with this Id" })
+        }
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'plz provied data' }) }
 
 
 
         if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'Please provide a valid Id' }) }
 
-
-
-
         if (rating <= 1 || rating >= 5) { return res.status(400).send({ status: false, message: "Rating lenth B/W  min 1 to max 5" }) }
-
 
         let date = moment().format("YYYY-MM-DD")                //date by using Moment
         data.reviewedAt = date;
