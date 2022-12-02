@@ -17,11 +17,10 @@ router.post("/login",userController.userLogin)             // login Api
 
 router.post("/books" ,auth.authenticate,auth.authorisation, bookController.createBooks)
 
-router.get("/books/:bookId", bookController.booksById) //auth.authenticate,
+router.get("/books/:bookId",auth.authenticate, bookController.booksById) 
+router.get("/books",auth.authenticate, bookController.getBook) //auth.authenticate,
 
-router.get("/books", bookController.getBook) //auth.authenticate,
-
-router.delete("/books/:bookId", bookController.deletById)
+router.delete("/books/:bookId",auth.authenticate,auth.authorisation, bookController.deletById)
 
 router.put("/books/:bookId",auth.authenticate,auth.authorisation, bookController.updateById)
 

@@ -1,5 +1,5 @@
 const userModel = require("../Models/userModel")
-const { isValidName, isValidEmail, isValidNumber, isValidPassward, forName } = require("../validator/validator")
+const { isValidName, isValidEmail, isValidNumber, isValidPassward, forName,pincodes } = require("../validator/validator")
 const jwt = require('jsonwebtoken')
 
 
@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 const createdUser = async function (req, res) {
     try {
         let data = req.body
-        const { title, name, phone, email, password } = data
+        const { title, name, phone, email, password ,address,address:{street ,city,pincode } } = data
 
     //===========================validation for Key and Value present or Not=============================================// 
 
@@ -28,6 +28,13 @@ const createdUser = async function (req, res) {
         if (!isValidNumber(phone)) return res.status(400).send({ status: false, message: "phone no is not valid" })
         if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is not valid" })
         if (!isValidPassward(password)) return res.status(400).send({ status: false, message: "password is not valid" })
+       
+        if (!isValidName(street)) return res.status(400).send({ status: false, message: "plz provide street" })
+        if (!isValidName(city)) return res.status(400).send({ status: false, message: "plz provide city" })
+        if (!isValidName(pincode)) return res.status(400).send({ status: false, message: "plz provide pincode" })
+        if (!pincodes(pincode)) return res.status(400).send({ status: false, message: "plz provide a valid pincode" })
+
+
 
     //==========================================================================================================================//
 
