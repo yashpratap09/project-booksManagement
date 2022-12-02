@@ -54,8 +54,12 @@ const validatorISBN = function (ISBN) {
   return /^\+?([1-9]{3})\)?[-. ]?([0-9]{10})$/.test(ISBN);
 }
 
+const pincodes = function (pincode) {
+  return /^[1-9][0-9]{5}$/.test(pincode);
+}
+
  
 
 //===================================Export All validotor=================================//
 
-module.exports = { isValidName, isValidEmail, isValidNumber, isValidPassward, isValidObjectId, validatorISBN, forName }
+module.exports = { isValidName, isValidEmail, isValidNumber, isValidPassward, isValidObjectId, validatorISBN, forName,pincodes }

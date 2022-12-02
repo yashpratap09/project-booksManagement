@@ -23,7 +23,10 @@ const Reviewcreate = async function (req, res) {
 
         if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'Please provide a valid Id' }) }
 
-        if (rating <= 1 || rating >= 5) { return res.status(400).send({ status: false, message: "Rating lenth B/W  min 1 to max 5" }) }
+
+
+
+        if (rating <= 1 || rating > 5) { return res.status(400).send({ status: false, message: "Rating lenth B/W  min 1 to max 5" }) }
 
         let date = moment().format("YYYY-MM-DD")                //date by using Moment
         data.reviewedAt = date;
