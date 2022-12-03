@@ -177,9 +177,7 @@ const updateById = async function (req, res) {
     const bookId = req.params.bookId
     const data = req.body
 
-    // if (Object.keys(bookId) == 0) {
-    //   return res.status(400).send({ status: false, message: "bookId is mandatory in Path" })
-    // }
+    
     if (Object.keys(data) == 0) {
       return res.status(400).send({ status: false, message: "Provide data to update" })
     }

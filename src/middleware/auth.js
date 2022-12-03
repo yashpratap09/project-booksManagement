@@ -55,7 +55,7 @@ const authorisation = async function (req, res, next) {
             
             if(!checkId){return res.status(404).send({ status: false, message: 'bookId does not exists' }) }
 
-            let userId = checkId.userId//.map(x => x.userId)
+            let userId = checkId.userId
 
             let tokenUserId = req.loginUserId // token Id
 
