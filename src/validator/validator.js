@@ -1,4 +1,4 @@
-
+let mongoose = require("mongoose")
 //=============================Vlidator for Vlue(undefined,null and after trim lenth is zero)============================//
 
 const isValidName = function (value) {
@@ -22,7 +22,7 @@ const forName = function (value) {
 
 
 const isValidEmail = function (value) {
-  let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-z\-0-9]+\.)+[a-z]{2,3}))$/
+  let emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   if (emailRegex.test(value)) return true
 }
 
@@ -36,16 +36,19 @@ const isValidNumber = function (value) {
 
 //===========================Vlidation for Passward by using Regex=========================//
 
-const isValidPassward = function (value) {
-  let passward = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/
-  if (passward.test(value)) return true
+const isValidPassword = function (value) {
+  let password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/
+  if (password.test(value)) return true
 
 }
 
 //===========================Vlidation for mongoose/mongoDb Oject Id by using Regex=========================//
 
 const isValidObjectId = function (objectId) {
-  return /^[0-9a-fA-F]{24}$/.test(objectId)
+  // return /^[0-9a-fA-F]{24}$/.test(objectId)
+  var valid = mongoose.Types.ObjectId.isValid(objectId)
+  if(!valid){ return false }
+  else{return true}
 }
 
 //===========================Vlidation for ISBN Number by using Regex=========================//
@@ -62,4 +65,4 @@ const pincodes = function (pincode) {
 
 //===================================Export All validotor=================================//
 
-module.exports = { isValidName, isValidEmail, isValidNumber, isValidPassward, isValidObjectId, validatorISBN, forName,pincodes }
+module.exports = { isValidName, isValidEmail, isValidNumber, isValidPassword, isValidObjectId, validatorISBN, forName,pincodes }

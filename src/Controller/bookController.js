@@ -47,11 +47,11 @@ const createBooks = async function (req, res) {
     }
 
     let isUniquetitle = await bookModel.findOne({ title: data.title })
-    if (isUniquetitle) { return res.status(409).send({ status: false, message: 'Title already exist' }) }
+    if (isUniquetitle) { return res.status(409).send({ status: false, message: 'Title already exists' }) }
     let isValidid = await userModel.findOne({ _id: data.userId })
-    if (!isValidid) { return res.status(400).send({ status: false, message: 'User Id does not exist' }) }
+    if (!isValidid) { return res.status(400).send({ status: false, message: 'User Id does not exists' }) }
     let isUniqueISBN = await bookModel.findOne({ ISBN: data.ISBN })
-    if (isUniqueISBN) { return res.status(409).send({ status: false, message: 'ISBN already exist' }) }
+    if (isUniqueISBN) { return res.status(409).send({ status: false, message: 'ISBN already exists' }) }
 
     let date = moment().format("YYYY-MM-DD")
 
@@ -85,11 +85,11 @@ const getBook = async function (req, res) {
     const book = await bookModel.find({ isDeleted: false, ...queryParams, }).select({
       _id: 1, title: 1, excerpt: 1, userId: 1, category: 1,
       releasedAt: 1, reviews: 1
-    }).sort({ title: -1 });
+    }).sort({ title: 1 });
 
 
     if (book.length == 0) {
-      return res.status(404).send({ status: false, msg: "Document doesnt exist" });
+      return res.status(404).send({ status: false, msg: "Document doesn't exist" });
     }
 
     if (book) {
@@ -108,12 +108,12 @@ const getBook = async function (req, res) {
 const booksById = async function (req, res) {
   try {
     const bookId = req.params.bookId
-    // if (Object.keys(bookId) == 0) {
-    //   return res.status(400).send({ status: false, message: "bookId is mandatory in Path" })
-    // }
+    if (!bookId) {
+      return res.status(400).send({ status: false, message: "bookId is mandatory in Path" })
+    }
 
     if (!isValidObjectId(bookId)) { return res.status(400).send({ status: false, message: 'provide a valid book Id' }) }
-    const getdata = await bookModel.find({ _id: bookId, isDeleted: false }).select({ ISBN: 0 })
+    const getdata = await bookModel.find({ _id: bookId, isDeleted: false })//.select({ ISBN: 0 })
     if (getdata.length == 0) {
       return res.status(404).send({ status: false, message: "No book exists in Database with this Id" })
     }
@@ -148,9 +148,7 @@ const booksById = async function (req, res) {
 const deletById = async function (req, res) {
   try {
     const bookId = req.params.bookId
-    // if (Object.keys(bookId) == 0) {
-    //   return res.status(400).send({ status: false, message: "bookId should be in Path" })
-    // }
+    
 
     if (!isValidObjectId(bookId)) { return res.status(400).send({ status: false, message: 'Provide a valid Id' }) }
 

@@ -1,8 +1,8 @@
 const mongoose =require("mongoose")
-const ObjectId=mongoose.Schema.ObjectId
+const ObjectId = mongoose.Schema.ObjectId
 const bookSchema=new mongoose.Schema({
 
-    title: { type:String, required:true,unique:true},
+    title: { type:String, required:true,unique:true ,trim: true},
     excerpt: {type:String, required:true}, 
     userId: {type:ObjectId,required:true, ref:"User"},
     ISBN: {type:String, required:true, unique:true},

@@ -18,10 +18,16 @@ const authenticate = function (req, res, next) {
             jwt.verify(token, "project/booksManagementGroup22", function (err, decodedToken) {
 
                 if (err) {
+                    if(err.message=="invalid token"){
+                        return res.status(401).send({ status: false, message: "Token in not valid" })}
+
+                    if(err.message=="jwt expired"){
+                        return res.status(401).send({ status: false, message: "Token has been expired" })
+                    }
                     return res.status(401).send({ status: false, message: err.message })
+
                 }
                 else{
-
                     req.loginUserId = decodedToken.id       // golbelly  in  decodedToken.id 
                     next()
 
@@ -41,9 +47,7 @@ const authenticate = function (req, res, next) {
 const authorisation = async function (req, res, next) {
     try {
 
-
         let idParams = req.params.bookId  
-
 
         if (idParams) {
             if (!isValidObjectId(idParams)) { return res.status(400).send({ status: false, message: 'Please provide a valid bookId' }) }
@@ -55,7 +59,7 @@ const authorisation = async function (req, res, next) {
 
             let tokenUserId = req.loginUserId // token Id
 
-            if (tokenUserId != userId) { return res.status(403).send({ status: false, msg: "You are not authorised to perform this task 1" }) }
+            if (tokenUserId != userId) { return res.status(403).send({ status: false, message: "You are not authorised to perform this task 1" }) }
 
         }
         else {
