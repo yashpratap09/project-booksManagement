@@ -2,12 +2,13 @@ let mongoose = require("mongoose")
 //=============================Vlidator for Vlue(undefined,null and after trim lenth is zero)============================//
 
 const isValidName = function (value) {
-  if (typeof value === undefined || typeof value === null) {
+  if (typeof value === undefined || typeof value === null || value === "" ) {
     return false;
   }
-  if (typeof value === "string" && value.trim().length > 0) {
+  if (typeof value === "string" && value.trim().length > 0 ) {
     return true;
   }
+  
 }
 
 

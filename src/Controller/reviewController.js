@@ -19,7 +19,7 @@ const Reviewcreate = async function (req, res) {
         }
         if (typeof rating != "number" || rating > 5 || rating < 1) { return res.status(400).send({ status: false, message: "Rating takes only numberic value in between 1-5" }) }
         // if (rating <= 1 || rating > 5) { return res.status(400).send({ status: false, message: "Rating length should be  min 1 to max 5" }) }
-
+        if (review==='') { return res.status(400).send({ status: false, message: "Review should not be empty or invalid" }) }
         if (review) {
             if (!isValidName(review)) { return res.status(400).send({ status: false, message: "Review should not be empty or invalid" }) }
         }
@@ -28,7 +28,7 @@ const Reviewcreate = async function (req, res) {
             return res.status(404).send({ status: false, message: "No book exists in Database with this Id" })
         }
 
-        let date = moment().format("YYYY-MM-DD")                //date by using Moment
+        let date = moment().format("YYYY-MM-DD")               //date by using Moment
         data.reviewedAt = date;
         data.bookId = id
 
