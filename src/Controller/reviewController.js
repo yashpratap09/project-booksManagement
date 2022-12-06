@@ -33,7 +33,7 @@ const Reviewcreate = async function (req, res) {
         data.bookId = id
 
         const reviews = await reviewModel.create(data);
-        const updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } }, { new: true })  // update reviews 
+        const updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } })  // update reviews 
 
        
         return res.status(201).send({ status: true, data: reviews })
@@ -43,7 +43,6 @@ const Reviewcreate = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
-
 
 //======================================<== updateReview RREVIEW API==>============================================================//
 
@@ -57,7 +56,7 @@ const updateReview = async function (req, res) {
             res.status(400).send({ status: false, message: 'plz prrovied valid bookId' });
             return;
         }
-      
+
         if (!isValidObjectId(reviewId)) {
             res.status(400).send({ status: false, message: 'plz prrovied valid reviewId' });
             return;
@@ -67,8 +66,7 @@ const updateReview = async function (req, res) {
         if (!findReview) {
             return res.status(404).send({ status: false, message: "No Review Available in this Id" })
         }
-       
-
+        
         if (Object.keys(data).length == 0) {
             return res.status(400).send({ message: " plz provied data" })
         }
@@ -77,6 +75,7 @@ const updateReview = async function (req, res) {
         if (reviewedBy) {
             if (!isValidName(reviewedBy) || !forName(reviewedBy)) { return res.status(400).send({ status: false, message: "Plz provied a valid name which starts with capital in reviewedBy" }) }
         }
+        if (review==='') { return res.status(400).send({ status: false, message: "Review should not be empty" }) }
         if (review) {
             if (!isValidName(review)) { return res.status(400).send({ status: false, message: "Review should not be empty or invalid" }) }
         }
@@ -85,7 +84,7 @@ const updateReview = async function (req, res) {
             if (typeof rating != "number" || rating > 5 || rating < 1) { return res.status(400).send({ status: false, message: "Rating takes only numberic value in between 1-5" }) }
         }
         if (findReview.bookId != bookId) { return res.status(404).send({ status: false, message: "ReviewId and bookId does not match" }) }
-
+        
         const updatedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { ...data }, { new: true }).select({ __v: 0 })
 
         return res.status(200).send({ status: true, message: 'Review updated', data: updatedReview });

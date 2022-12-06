@@ -1,30 +1,29 @@
 const userModel = require("../Models/userModel")
 const bookModel = require("../Models/bookModel")
 const reviewModel = require("../Models/reviewModel")
+const aws = require("aws-sdk")
 
-const { isValidName, isValidObjectId, validatorISBN
-} = require("../validator/validator")
+const { isValidName, isValidObjectId, validatorISBN} = require("../validator/validator")
 const moment = require("moment")
 
 //=========================================<==CREATEBOOK API==>==============================================================//
 
 const createBooks = async function (req, res) {
   try {
-    const data = req.body;
 
+    const data = req.body;
+    
     if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'plz provide Data' }) }// When body have No data
 
     //===========================validate by using validetor folder(by using Regex and somthing)===============================//
 
     if (!isValidName(data.title)) { return res.status(400).send({ status: false, message: 'Title is required' }) }
 
-
     if (!isValidName(data.excerpt)) { return res.status(400).send({ status: false, message: 'Excerpt is required' }) }
 
     if (!isValidName(data.userId)) { return res.status(400).send({ status: false, message: 'User Id is required' }) }
 
     if (!isValidObjectId(data.userId)) { return res.status(400).send({ status: false, message: 'Please provide a valid userId' }) }
-
 
     if (!isValidName(data.ISBN)) { return res.status(400).send({ status: false, message: 'ISBN is required' }) }
 
@@ -34,6 +33,7 @@ const createBooks = async function (req, res) {
 
     if (!isValidName(data.subcategory)) { return res.status(400).send({ status: false, message: 'Subcategory is required' }) }
 
+
     if (data.releasedAt) {
       function dateIsValid(dateStr) {
         const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -41,7 +41,6 @@ const createBooks = async function (req, res) {
         if (dateStr.match(regex) === null) { return false }
         const date = new Date(dateStr);
         if (date == "Invalid Date") { return false }
-
       }
       if (dateIsValid(data.releasedAt) == false) { return res.status(400).send({ status: false, message: 'releasedAt format should be `YYYY-MM-DD` & valid date' }) }
     }
@@ -57,13 +56,53 @@ const createBooks = async function (req, res) {
 
     if (!data.releasedAt) { data.releasedAt = date }
 
-    const createBook = await bookModel.create(data)
+    
+//=============AWS LINK Creation===============//    
+    
+    aws.config.update({
+      accessKeyId: "AKIAY3L35MCRZNIRGT6N",
+      secretAccessKey: "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",
+      region: "ap-south-1"
+    })
+    
+    let uploadFile= async ( file) =>{
+      return new Promise( function(resolve, reject) {
+        let s3= new aws.S3({apiVersion: '2006-03-01'});
+        
+        var uploadParams= {
+          ACL: "public-read",
+          Bucket: "classroom-training-bucket",  //HERE
+          Key: "abc/" + file.originalname, //HERE 
+          Body: file.buffer
+      }
+  
+      s3.upload( uploadParams, function (err, data ){
+          if(err) {
+              return reject({"error": err})
+          }
+          console.log(data)
+          console.log("file uploaded succesfully")
+          return resolve(data.Location)
+      })
+  
+     })
+    }
+  
 
-    return res.status(201).send({ status: true, message: 'Success', data: createBook })
-
-
-  }
-  catch (error) {
+    let files = req.files
+    if(files && files.length>0){
+      let uploadedFileURL= await uploadFile( files[0] )
+      
+      data.bookCoverKey = uploadedFileURL
+      const createBook = await bookModel.create(data)
+          return res.status(201).send({ status: true, message: 'Success', data: createBook })
+      }
+      else{
+        res.status(400).send({ messsage: "No file found for bookCoverKey" })
+      }  
+      
+    }
+    catch (error) {
     return res.status(500).send({ status: false, message: error.message })
   }
 }
@@ -77,11 +116,8 @@ const getBook = async function (req, res) {
     const queryParams = req.query;
     const userid = req.query.userId
     if (userid) {
-      const ObjectId = require("mongodb").ObjectId;
-      const validId = ObjectId.isValid(userid);
-      if (!validId) { return res.status(400).send({ status: false, msg: "Invalid userId " }); }
+      if (!isValidObjectId(userid)) { return res.status(400).send({ status: false, message: 'Please provide a valid userId' }) }
     }
-
     const book = await bookModel.find({ isDeleted: false, ...queryParams, }).select({
       _id: 1, title: 1, excerpt: 1, userId: 1, category: 1,
       releasedAt: 1, reviews: 1
@@ -89,7 +125,7 @@ const getBook = async function (req, res) {
 
 
     if (book.length == 0) {
-      return res.status(404).send({ status: false, msg: "Document doesn't exist" });
+      return res.status(404).send({ status: false, message: "Document doesn't exist" });
     }
 
     if (book) {

@@ -64,9 +64,11 @@ const authorisation = async function (req, res, next) {
         }
         else {
             let idBody = req.body.userId
-            if (!isValidObjectId(idBody)) { return res.status(400).send({ status: false, message: 'Please provide a valid UserId' }) }
+            if(!idBody){return res.status(400).send({ status: false, message: 'plz give  UserId in the body' })}
+            if (!isValidObjectId(idBody)) { return res.status(400).send({ status: false, message: 'Please provide a valid UserId 1' }) }
             
             let checkId = await userModel.findById(idBody )
+            
             
             if(!checkId){return res.status(404).send({ status: false, message: 'userId does not exists' }) }
             
