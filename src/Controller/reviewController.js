@@ -11,7 +11,7 @@ const Reviewcreate = async function (req, res) {
         const { rating, reviewedBy, review } = data
 
         if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'Plz provide a valid bookId' }) }
-        if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'Plz provied data' }) }
+        if (Object.keys(data).length == 0) { return res.status(400).send({ status: false, message: 'Plz provied data' }) }
 
         if (!rating) { return res.status(400).send({ status: false, message: "rating is mandatory" }) }
         if (reviewedBy) {
@@ -62,16 +62,15 @@ const updateReview = async function (req, res) {
             res.status(400).send({ status: false, message: 'plz prrovied valid reviewId' });
             return;
         }
+        if (Object.keys(data).length == 0) {
+            return res.status(400).send({ message: " plz provied data" })
+        }
         
         let findReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false })
         if (!findReview) {
             return res.status(404).send({ status: false, message: "No Review Available in this Id" })
         }
        
-
-        if (Object.keys(data).length == 0) {
-            return res.status(400).send({ message: " plz provied data" })
-        }
 
         const { reviewedBy, review, rating } = data
         if (reviewedBy) {
