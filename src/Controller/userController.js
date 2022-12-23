@@ -61,7 +61,7 @@ const userLogin = async function (req, res) {
         let credentials = req.body
         let { email, password } = credentials       //=================Destructure data res.body
 
-        if (Object.keys(credentials) == 0) {
+        if (Object.keys(credentials).length == 0) {
             return res.status(400).send({ status: false, message: "email and password are required for Log in" })
         }
         if (!email) { return res.status(400).send({ status: false, message: "email is mandatory" }) }
